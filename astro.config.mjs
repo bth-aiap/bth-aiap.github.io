@@ -14,7 +14,6 @@ export default defineConfig({
 				{
 					label: 'Kursöversikt',
 					items: [
-						'',
 						'kunskap/examination',
 						'kunskap/seminarier',
 						'kunskap/kodgranskning',
