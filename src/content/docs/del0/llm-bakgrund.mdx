@@ -1,20 +1,118 @@
 ---
 title: Bakgrund om LLM:er
-description: Hur stora språkmodeller fungerar och vad de klarar
+description: Hur stora språkmodeller fungerar, tekniskt
 ---
 
-Grundläggande förståelse för hur språkmodeller fungerar hjälper dig att förstå varför de gör fel.
+import { Aside } from '@astrojs/starlight/components';
 
-Bakgrunden är **teknisk**: du ska förstå hur modellerna fungerar, inte bara hur man använder dem.
+För att kunna verifiera AI-genererad kod behöver du förstå hur den uppstår. Den här sidan går igenom hur stora språkmodeller (LLM:er) fungerar, på en teknisk nivå, och kopplar varje del till vad den betyder när du programmerar med dem.
 
-Ämnen:
+<p class="time">(Ungefär 6 studietimmar)</p>
 
-* tokenisering och embeddings
-* transformerarkitekturen och uppmärksamhet (attention)
-* förträning, finjustering och förstärkningsinlärning från mänsklig återkoppling
-* sampling: temperatur och andra parametrar, och varför svaren varierar
-* kontextfönster och vad som händer när det blir fullt
-* varför modeller hallucinerar och vad det betyder för kod
-* modellers styrkor och begränsningar
+## Från text till tokens
 
-{/* TODO: skriv innehållet, se QUESTIONS.md */}
+En modell läser inte tecken eller ord utan **tokens**. En tokenizer (ofta *byte pair encoding* eller liknande) delar upp text i bitar från ett fast vokabulär på typiskt 50 000–250 000 tokens. Vanliga ord blir en token, ovanliga ord delas upp i flera.
+
+Konsekvenser för dig:
+
+* Kod, siffror och ovanliga språk kräver ofta fler tokens än engelsk prosa. Det påverkar både kostnad och hur mycket som ryms.
+* Modeller har svårt med uppgifter som bygger på enskilda tecken, till exempel att räkna bokstäver, eftersom de aldrig ser bokstäverna direkt.
+
+Utforska gärna hur en tokenizer delar upp din egen kod med ett verktyg som tillhandahålls av modellleverantörerna.
+
+## Embeddings
+
+Varje token slås upp i en tabell och blir en **vektor**: en lista med tusentals flyttal. Under träningen lär sig modellen vektorer där tokens med liknande användning hamnar nära varandra. Det är i vektorrummet modellen "tänker", inte i text.
+
+## Transformern och uppmärksamhet
+
+Moderna LLM:er bygger på **transformerarkitekturen**. Kärnan är *self-attention*: för varje token i sekvensen räknar modellen ut hur mycket den ska "titta på" varje tidigare token. Varje token omvandlas till tre vektorer, en *query*, en *key* och en *value*. Likheten mellan en querys och alla keys avgör med vilka vikter values blandas ihop.
+
+Förenklat, för en token som ska uppdateras:
+
+```text
+vikter  = softmax(Q · Kᵀ / √d)
+ny_vektor = vikter · V
+```
+
+Flera sådana uppmärksamhetshuvuden körs parallellt, följt av ett litet neuralt nät, och detta staplas i tiotals eller hundratals lager. Modeller för textgenerering är *kausala*: en token får bara titta på tidigare tokens, inte på kommande.
+
+Konsekvenser för dig:
+
+* Kostnaden för uppmärksamhet växer med sekvenslängden. Därför har modeller en gräns för hur långt sammanhang de kan hantera.
+* Modellen har inget minne utanför sekvensen den får se. Allt den "vet" om ditt projekt är det som ligger i kontexten just nu, plus det den lärde sig vid träningen.
+
+## Träning
+
+En modell tränas i flera steg.
+
+1. **Förträning.** Modellen tränas på enorma mängder text, inklusive kod, för att förutsäga nästa token. Det kostar enormt mycket beräkningskraft. Resultatet kan fortsätta text, men följer inte instruktioner särskilt väl.
+2. **Instruktionsfinjustering.** Modellen tränas vidare på exempel på instruktioner och bra svar, så att den beter sig som en assistent.
+3. **Förstärkningsinlärning.** Modellen justeras utifrån belöningssignaler, till exempel mänskliga preferenser (RLHF) eller automatiskt kontrollerbara resultat, som att kod klarar tester. Detta är en stor anledning till att moderna modeller är bra på kod.
+
+Konsekvenser för dig:
+
+* Modellen har en **kunskapsgräns**: den känner inte till bibliotek, versioner eller API:er som kom efter träningen.
+* Den har lärt sig att producera svar som *ser* bra ut. Träning belönar ofta svar som låter övertygande, inte svar som är sanna.
+
+## Generering och sampling
+
+Modellen producerar en sannolikhetsfördelning över alla tokens i vokabuläret. En token väljs, läggs till i sekvensen, och processen upprepas. Hur valet görs styrs av *sampling*:
+
+* **Temperatur:** låg temperatur ger nästan alltid den mest sannolika token, hög temperatur ger mer varierade svar.
+* **Top-p / top-k:** begränsar valet till de mest sannolika kandidaterna.
+
+Konsekvenser för dig:
+
+* Samma prompt kan ge olika kod vid olika körningar. Du kan inte lita på att ett resultat som fungerade en gång går att återskapa.
+* Det finns inget sätt för modellen att "backa". En token som redan valts är en del av underlaget för resten.
+
+## Kontextfönster
+
+**Kontextfönstret** är det maximala antalet tokens modellen kan hantera åt gången: din instruktion, tidigare konversation, filer den har läst och svaret den skriver. När fönstret fylls tvingas ett verktyg att trunkera eller sammanfatta, och detaljer går förlorade. Modeller hanterar också information olika bra beroende på var i kontexten den ligger.
+
+Konsekvenser för dig:
+
+* Långa sessioner blir sämre: tidiga beslut och instruktioner glöms eller blandas ihop.
+* Det du vill att modellen ska följa bör stå tydligt och kort, och på en plats den läser varje gång (se `AGENTS.md` i [harness](/del0/harness/)).
+
+## Varför modeller hallucinerar
+
+En modell gör hela tiden samma sak: väljer en rimlig fortsättning. Den har ingen inbyggd mekanism för att skilja det den "vet" från det den gissar, och den belönades under träningen ofta för att svara hellre än att säga att den inte vet. Därför uppfinner den ibland funktioner, paket, flaggor och källor som inte finns, formulerade lika självsäkert som sanningen.
+
+Typiska hallucinationer i kod:
+
+* anrop till API:er eller bibliotekspaket som inte existerar (ibland ett riktigt säkerhetsproblem, eftersom någon kan registrera ett sådant paketnamn)
+* föråldrad användning av riktiga bibliotek
+* tester som *ser* ut att kontrollera något men som alltid går igenom
+* korrekta förklaringar som inte stämmer med koden
+
+<Aside type="tip" title="Kursens poäng">
+Hallucinationer går inte att "prompta bort". De hanteras genom verifiering: kör koden, kör oberoende tester, läs dokumentationen. Det är därför kursen handlar om att generera **och** verifiera, testa och validera.
+</Aside>
+
+## Styrkor och begränsningar för programmering
+
+Modeller är starka på:
+
+* vanliga mönster, boilerplate och översättning mellan språk
+* att förklara och sammanfatta kod
+* att generera tester och dokumentation
+* att snabbt skissa flera lösningar
+
+De är svagare på:
+
+* ovanliga bibliotek och nya versioner
+* långa sammanhang och stora kodbaser där många delar måste hänga ihop
+* att veta vad som är *rätt* att bygga (krav och validering)
+* att upptäcka sina egna fel utan en extern kontroll
+
+## Reflektionsfrågor
+
+Fundera över detta inför kursstarten:
+
+1. Varför kan en modell producera felaktig kod och ändå en korrekt förklaring av den?
+2. Vilka delar av ditt arbetssätt gör ett kontextfönster på 200 000 tokens ändå otillräckligt?
+3. Varför är det riskabelt att låta samma modell skriva både koden och testerna?
+
+{/* TODO: kontrollera tekniska påståenden och lägg till källor/fördjupningslänkar, se QUESTIONS.md */}

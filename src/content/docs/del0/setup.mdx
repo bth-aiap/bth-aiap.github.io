@@ -3,21 +3,98 @@ title: Utvecklarmiljö
 description: Terminal och AI-verktyg
 ---
 
-Du behöver en miljö där du kan köra AI-agenter mot din kod. Kursen stödjer **Linux, macOS och Windows via WSL**.
+import { Aside, Steps } from '@astrojs/starlight/components';
 
-## Verktyg
+Du behöver en miljö där du kan köra AI-agenter mot din kod. Kursen stödjer **Linux, macOS och Windows via WSL**. Det här är en stor del av kursens första vecka, så ta det lugnt och fråga om något inte fungerar.
 
-Följande verktyg används i kursen just nu. Verktygslandskapet ändras snabbt och listan kommer sannolikt att vara förändrad nästa år.
+<p class="time">(Ungefär 4 studietimmar)</p>
 
-* **Terminal** – din arbetsplats.
-* **[Claude Code](https://claude.com/claude-code)** – kodagent från Anthropic.
-* **[Codex](https://openai.com/codex/)** – kodagent från OpenAI.
-* **[OpenCode](https://opencode.ai/)** – öppen kodagent som kan använda många olika modeller.
-* **[herdr](https://herdr.dev/)** – ett program för att köra flera kodagenter.
-* **[Tailscale](https://tailscale.com/)** – privat nätverk mellan dina maskiner. I kursen används det främst för att visa hur körning av agenter kan **distribueras över flera maskiner** med herdr.
+<Aside type="caution" title="Verktygen förändras snabbt">
+Verktygslandskapet kring AI-agenter ändras varje månad. Installationskommandona nedan hämtades från respektive projekts egen dokumentation i november 2026. Om något inte fungerar, titta i den officiella dokumentationen först.
+</Aside>
 
-## Kostnad
+## Terminal
 
-Det är ännu inte klart vem som betalar för åtkomst till verktygen och modellerna, skolan eller studenterna.
+Alla verktyg i kursen körs i terminalen.
 
-{/* TODO: installationsinstruktioner per verktyg och plattform, licenser/konton, se QUESTIONS.md */}
+* **Linux:** använd terminalen i din distribution.
+* **macOS:** använd Terminal eller en annan terminalemulator.
+* **Windows:** installera [WSL](https://learn.microsoft.com/windows/wsl/install) (Windows Subsystem for Linux) och arbeta i den Linuxmiljön. Kör alla kommandon nedan inifrån WSL och använd Linuxinstruktionerna.
+
+Du behöver också [git](https://git-scm.com/) och ett [GitHub](https://github.com)-konto, eftersom allt arbete lämnas in via GitHub.
+
+## Kodagenter
+
+Du ska installera alla tre agenterna. De fungerar på olika sätt och du kommer att jämföra dem under kursen.
+
+### Claude Code
+
+Kodagent från Anthropic. Dokumentation: [code.claude.com/docs](https://code.claude.com/docs/en/overview).
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+På macOS och Linux kan du alternativt använda Homebrew: `brew install --cask claude-code`. Gå sedan till en projektmapp och kör `claude`. Första gången får du logga in.
+
+### Codex
+
+Kodagent från OpenAI. Dokumentation: [github.com/openai/codex](https://github.com/openai/codex).
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
+Alternativ: `npm install -g @openai/codex`. Kör sedan `codex`.
+
+### OpenCode
+
+Öppen kodagent som kan använda modeller från många olika leverantörer. Dokumentation: [opencode.ai](https://opencode.ai).
+
+```bash
+curl -fsSL https://opencode.ai/v2/install | bash
+```
+
+Alternativ finns för bland annat Homebrew, npm och Arch Linux, se [README:n](https://github.com/anomalyco/opencode). Kör sedan `opencode`.
+
+## herdr
+
+[herdr](https://herdr.dev/) är ett program för att köra och övervaka flera kodagenter på en gång. Det visar vilka agenter som arbetar, är klara eller väntar på dig, och agenterna fortsätter köra även om du stänger programmet. Det finns för macOS, Windows och Linux.
+
+```bash
+curl -fsSL https://herdr.dev/install.sh | sh
+```
+
+Installationsskriptet lägger programmet i `~/.local/bin`, så se till att den mappen finns i din `PATH`.
+
+I kursen använder vi herdr för att köra flera agenter parallellt och för att se hur agentkörning kan fördelas över flera maskiner. Det senare behöver du Tailscale till.
+
+## Tailscale
+
+[Tailscale](https://tailscale.com/) skapar ett privat nätverk mellan dina egna enheter. herdr kan ansluta till andra maskiner via SSH, och Tailscale är ett enkelt sätt att nå dem säkert utan att öppna portar mot internet.
+
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+```
+
+På macOS installerar du appen från [tailscale.com/download](https://tailscale.com/download). Under WSL används Tailscale normalt på Windowssidan, se [Tailscales dokumentation](https://tailscale.com/kb).
+
+## Verifiera att allt fungerar
+
+<Steps>
+
+1. Skapa en tom mapp och kör `git init` i den.
+2. Starta varje agent (`claude`, `codex`, `opencode`) och be den skriva en "Hello world" i ett valfritt språk.
+3. Be agenten köra programmet och visa utdata.
+4. Starta `herdr` och öppna en agent där.
+
+</Steps>
+
+Du är klar när alla tre agenter kan skapa en fil och köra den.
+
+## Kostnad och konton
+
+Agenterna kräver konton hos respektive leverantör, och användning av modellerna kostar pengar. Det är ännu inte klart om skolan eller studenterna står för kostnaden. Vi uppdaterar den här sidan när det är beslutat.
+
+{/* TODO: kostnad och licenser, se QUESTIONS.md */}

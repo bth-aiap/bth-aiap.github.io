@@ -1,20 +1,97 @@
 ---
 title: Harness
-description: Verktygen runt modellen
+description: Verktygen runt modellen, tekniskt
 ---
 
-En AI-agent är mer än en modell. *Harnessen* är verktygen och loopen runt modellen: den som läser filer, kör kommandon, hanterar kontext och frågar om lov.
+import { Aside } from '@astrojs/starlight/components';
 
-Ämnen:
+En språkmodell kan bara ta emot text och ge text tillbaka. Det är **harnessen** som gör den till en agent: programmet runt modellen som ger den verktyg, skickar in rätt kontext, kör det modellen ber om och styr vad den får göra. Claude Code, Codex och OpenCode är alla harnesses. Samma modell kan bete sig mycket olika i olika harnesses.
 
-* agentloopen: modell, verktyg, resultat
-* instruktionsfiler som `AGENTS.md` och `CLAUDE.md`
-* behörigheter och sandboxing
-* kontexthantering
-* hur agentkörning kan distribueras över maskiner (herdr och Tailscale)
+<p class="time">(Ungefär 5 studietimmar)</p>
 
-Harnessen behandlas **tekniskt**, på samma nivå som LLM-bakgrunden.
+## Agentloopen
 
-Startrepona i del 1–3 styrs av just sådana instruktionsfiler.
+Kärnan i alla harnesses är en loop:
 
-{/* TODO: skriv innehållet, se QUESTIONS.md */}
+```text
+meddelanden = [systemprompt, instruktionsfiler, användarens uppgift]
+upprepa:
+    svar = modell(meddelanden, tillgängliga_verktyg)
+    om svaret innehåller verktygsanrop:
+        kontrollera behörighet (fråga användaren vid behov)
+        resultat = kör verktyget
+        lägg till svaret och resultatet i meddelanden
+    annars:
+        visa svaret för användaren och stanna
+```
+
+Modellen kan alltså inte själv läsa en fil eller köra ett kommando. Den *ber* harnessen göra det genom ett strukturerat **verktygsanrop**, och harnessen skickar tillbaka resultatet som en ny del av texten modellen ser.
+
+Typiska verktyg: läsa och skriva filer, söka i koden, köra skalkommandon, hämta webbsidor, starta underagenter.
+
+Konsekvenser för dig:
+
+* En agent är bara så bra som sina verktyg och den feedback de ger. En agent som kan **köra testerna** och läsa felen kan rätta sig själv, en som inte kan det gissar.
+* Varje varv i loopen lägger till text i kontexten. Långa körningar fyller kontextfönstret (se [LLM-bakgrund](/del0/llm-bakgrund/)).
+
+## Systemprompt och instruktionsfiler
+
+Före din uppgift lägger harnessen in en **systemprompt** (leverantörens grundinstruktioner) och projektets **instruktionsfiler**:
+
+* `CLAUDE.md` läses av Claude Code
+* `AGENTS.md` är en gemensam konvention som flera agenter läser, bland annat Codex och OpenCode
+
+Dessa filer läses in i början av varje session. De är det enda sätt du har att ge agenten bestående kunskap om projektet: hur man bygger, testar och kör, kodstil, vad den inte får göra, och hur resultat ska verifieras.
+
+I kursens startrepon är instruktionsfilerna i princip allt som finns. `CLAUDE.md` innehåller bara raden `@AGENTS.md`, som importerar den andra filen, så att det finns en enda fil att underhålla.
+
+Konsekvenser för dig:
+
+* Instruktionsfilerna är kod i bemärkelsen att de styr resultatet: håll dem korta, konkreta och uppdaterade.
+* Instruktioner är inte garantier. Modellen kan ignorera dem, särskilt när kontexten är lång. Verifiera att de följs.
+
+## Behörigheter och sandboxing
+
+En agent som kan köra kommandon kan också radera filer, läsa hemligheter eller skicka data åt fel håll. Harnessar hanterar det på två sätt:
+
+* **Behörigheter:** agenten frågar innan den gör något känsligt, och du kan förhandsgodkänna vissa kommandon eller helt tillåta allt. Att tillåta allt är bekvämt men flyttar hela ansvaret till dig.
+* **Sandboxing:** agenten körs i en begränsad miljö, till exempel med begränsad filåtkomst eller utan nätverk, så att misstag inte kan göra skada utanför.
+
+Prompt injection är ett verkligt hot: text som agenten läser (en webbsida, en fil, ett issue) kan innehålla instruktioner som den tolkar som kommandon. Behandla allt agenten läser från externa källor som otillförlitligt.
+
+<Aside type="caution">
+Ju mer autonomt du låter en agent arbeta, desto viktigare blir sandboxing och verifiering efteråt. Det här är en röd tråd genom hela kursen, och en central fråga i seminarierna: hur stor behörighet är rimlig när insatsen är låg respektive hög?
+</Aside>
+
+## Kontexthantering
+
+Harnessar hanterar det begränsade kontextfönstret på olika sätt:
+
+* **Sammanfattning:** när kontexten blir full komprimeras tidigare konversation.
+* **Selektiv läsning:** agenten söker och läser bara delar av filer i stället för hela kodbasen.
+* **Underagenter:** en uppgift delegeras till en ny agent med eget, rent kontextfönster, som lämnar tillbaka bara ett kort resultat.
+* **Minne och regler:** information sparas i filer som läses in igen i senare sessioner.
+
+## Köra agenter parallellt och distribuerat
+
+När agenter kan arbeta självständigt går det att köra flera samtidigt, till exempel en som implementerar, en som granskar och en som skriver tester. Programmet [herdr](https://herdr.dev/) är byggt för det: det visar vilka agenter som arbetar, är klara eller väntar på dig, och en agent kan starta en annan och få dess rapport tillbaka.
+
+Agenterna behöver inte köra på din egen maskin. herdr kan ansluta till andra maskiner över SSH, och [Tailscale](https://tailscale.com/) är ett bekvämt sätt att nå dem. Då kan till exempel tunga uppgifter köras på en server medan du arbetar från din laptop.
+
+Distribuerad körning väcker också frågor som vi återkommer till: var finns koden och hemligheterna, vem har åtkomst, och hur vet du vad en agent som du inte tittar på faktiskt gjorde?
+
+## Skillnader mellan harnesses
+
+Claude Code, Codex och OpenCode skiljer sig åt i bland annat vilka modeller de kan använda, hur behörigheter och sandboxing fungerar, hur instruktionsfiler läses och vilka verktyg som finns. Under kursen kommer du att prova alla tre och själv bedöma skillnaderna. En bra utgångspunkt när du jämför är att fråga:
+
+* Vilka verktyg har agenten och vilka behörigheter krävs?
+* Hur ser den till att kontexten inte tar slut?
+* Hur tydligt visar den vad den gjorde, så att du kan granska det?
+
+## Reflektionsfrågor
+
+1. Vad händer i agentloopen om ett verktygsanrop misslyckas? Hur påverkar det resultatet?
+2. Vad skulle du skriva i `AGENTS.md` för ett hobbyprojekt, och vad skulle du lägga till för ett verksamhetskritiskt system?
+3. Vilka risker uppstår när du tillåter en agent att köra utan att fråga, och hur kan du begränsa dem?
+
+{/* TODO: kontrollera detaljer om respektive harness (behörighetsmodeller, filer som läses) mot aktuell dokumentation, se QUESTIONS.md */}
