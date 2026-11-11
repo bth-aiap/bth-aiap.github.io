@@ -36,6 +36,7 @@ export default defineConfig({
 					label: 'Kunskap',
 					items: [
 						'kunskap/verifiering',
+						'kunskap/entreprenorskap',
 						'kunskap/etik_och_hallbarhet',
 					],
 				},
