@@ -4,8 +4,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	// TODO: site/base depend on the final GitHub org/repo name, see QUESTIONS.md
-	site: 'https://aiap.example.org',
+	site: 'https://bth-aiap.github.io',
 	integrations: [
 		starlight({
 			title: 'AIAP',

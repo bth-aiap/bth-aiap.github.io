@@ -14,5 +14,5 @@ Course website for AIAP (AI accelerated programming), Astro + Starlight, all con
 - The sidebar in `astro.config.mjs` is the source of truth for page order; add new pages there.
 - In `.mdx`, comments must be `{/* ... */}`; HTML `<!-- -->` comments break the build.
 - Unfinished spots are marked `{/* TODO: ... */}` and have a matching entry in `../QUESTIONS.md`.
-- Student starter repos (`../aiap-del1-hobby`, `../aiap-del2-webapp`, `../aiap-del3-kritisk`) are referenced from `del1`–`del3`; keep them consistent. Part 0 has no starter repo.
+- Student starter repos (`../aiap-part1-hobby`, `../aiap-part2-webapp`, `../aiap-part3-critical`) are referenced from `del1`–`del3`; keep them consistent. Part 0 has no starter repo.
 - Do not add the jsux anti-AI mechanisms (hidden prompt, agent-policy CI); AI use is required in this course.
