@@ -1,0 +1,88 @@
+---
+title: Uppgift del 3 – Verksamhetskritisk mjukvara
+description: Utmaning, krav och leverabler för del 3
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Uppgiften är **utmaningsbaserad** (challenge-based). Du formulerar själv utmaningen inom ett givet område. Kraven handlar om hur du arbetar, bevisar och dokumenterar. Här är kraven på verifiering och validering de högsta i kursen.
+
+## Stor idé
+
+När ett fel kan kosta liv räcker det inte att koden *verkar* fungera. Du måste kunna argumentera för att den gör det, och visa hur du vet.
+
+## Grundläggande fråga
+
+**Hur kan AI-accelererad utveckling användas i mjukvara där ett fel kan kosta liv eller säkerhet, och vad måste vi kräva av verifiering och validering för att det ska vara försvarbart?**
+
+## Utmaningen
+
+Välj ett system inom **försvar, sjöfart eller flyg**, till exempel ett flygkontrollsystem eller ett system för kollisionsundvikande till sjöss. Projektet ska vara fiktivt eller bygga på öppen information. Bygg en kärna av systemet med AI och **argumentera för att den är tillförlitlig**. Du bestämmer system, avgränsning och teknik. Utmaningen är öppen.
+
+Du arbetar i din fork av [`aiap-part3-critical`](https://github.com/bth-aiap/aiap-part3-critical). Din `AGENTS.md` är din dokumentation och det vi bedömer utifrån.
+
+<Aside type="caution" title="Öppen information">
+Använd inte sekretessbelagd information eller information du fått tillgång till genom ditt arbete. Bygg på öppna källor och egna antaganden.
+</Aside>
+
+## Vägledande frågor
+
+* Vilka är systemets krav, och vilka fel kan uppstå? Vad är konsekvensen av varje fel?
+* Hur spårar du varje krav till ett test eller en annan verifiering?
+* Vilken verifiering behövs utöver vanliga tester (till exempel egenskapsbaserade tester, statisk analys, modellkontroll)?
+* Hur säkerställer du oberoende: att den som verifierar inte delar misstaget med den som genererat?
+* Hur ser det ut när systemet misslyckas? Misslyckas det på ett säkert sätt?
+* Hur argumenterar du för att systemet är tillräckligt säkert, och vad förblir oprövat?
+* Etik: vem bär ansvaret, hur bevaras mänsklig kontroll, och vilka dubbla användningsområden finns?
+* Ekonomi: vad kostar verifiering i förhållande till vad ett fel kostar?
+
+## Vägledande aktiviteter
+
+1. Avgränsa systemet och skriv krav med identifierare.
+2. Gör en riskanalys: identifiera faror och felsätt, och bedöm konsekvenser.
+3. Planera verifieringen innan du genererar kod, och koppla varje krav till verifiering.
+4. Generera i små steg. Granska **varje** ändring och dokumentera granskningen.
+5. Använd flera former av verifiering och oberoende kontroller (till exempel låt en annan agent eller en annan person skriva testerna utifrån kraven, inte utifrån koden).
+6. Prova felfall och fel i indata och miljö.
+7. Skriv ett kort *assurance*-argument: påståenden, belägg och kända luckor.
+8. Titta på hur verklig praxis ser ut för att få inspiration, till exempel DO-178C för flygmjukvara.
+
+Resurser: [Generera, verifiera, testa, validera](/kunskap/verifiering/), [Entreprenörskap](/kunskap/entreprenorskap/), [Etik och hållbarhet](/kunskap/etik_och_hallbarhet/), [Kodgranskning](/kunskap/kodgranskning/).
+
+## Krav
+
+Alla krav ska vara uppfyllda för godkänt. `AGENTS.md` har rubriker som motsvarar kraven.
+
+**K1. Systemkärnan finns och går att köra.**
+
+**K2. Utmaningen är formulerad.** Under *Project*: system, domän, avgränsning, antaganden, och att projektet bygger på öppen information.
+
+**K3. Krav med spårbarhet.** Under *Requirements*: krav med identifierare. Under *Verification plan*: varje krav är kopplat till minst en verifiering, och en spårbarhetstabell visar att inget krav saknar verifiering.
+
+**K4. Faror och felsätt.** Under *Hazards and failure modes*: identifierade faror, felsätt, konsekvenser och vilka åtgärder som motverkar dem.
+
+**K5. Verifiering och validering på hög nivå.** Under *Verification plan*: mer än vanliga enhetstester. Minst två olika typer av verifiering, och felfall testas uttryckligen.
+
+**K6. Oberoende.** Du redovisar hur verifieringen är oberoende av genereringen, till exempel tester som skrivits utifrån kraven av en annan agentsession eller person än den som skrev koden.
+
+**K7. Ingen ogranskad AI-kod.** Under *AI usage log*: varje AI-genererad ändring har granskats av en människa, och granskningen är dokumenterad. Minst tre fall där verifieringen hittade fel.
+
+**K8. Assurance-argument.** Under *Assurance argument*: påståenden, belägg och kända luckor, inklusive vad du *inte* har bevisat.
+
+**K9. Säkerhet.** Under *Security*: hot, hantering av hemligheter och beroenden, och leveranskedjan för AI-genererad kod.
+
+**K10. Etik och hållbarhet.** Under *Ethics and sustainability*: ansvar, mänsklig kontroll, dubbla användningsområden och resursförbrukning.
+
+**K11. Ekonomi.** Under *Entrepreneurship*: kostnaden för verifiering mot kostnaden för fel, och en affärsmodell eller anskaffningsvinkel.
+
+**K12. Beslutsloggen.** Under *Decision log*: viktiga beslut med alternativ och skäl.
+
+**K13. Kodgranskning (2 hp).** Du granskar de repon läraren tilldelat dig, på GitHub, och ditt eget repo är redo att granskas. Se [kodgranskning](/kunskap/kodgranskning/).
+
+**K14. Seminarium.** Du deltar och kan försvara ditt assurance-argument, inklusive dess luckor.
+
+## Reflektion
+
+Inför seminariet: skulle du låta systemet du byggt användas på riktigt, och vad skulle du behöva se först?
+
+{/* TODO: standarder att referera till, tidsplan, bedömningskriterier, se QUESTIONS.md */}

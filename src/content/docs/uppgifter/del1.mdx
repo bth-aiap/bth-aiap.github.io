@@ -1,0 +1,87 @@
+---
+title: Uppgift del 1 – Hobbyprojekt
+description: Utmaning, krav och leverabler för del 1
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Den här uppgiften är upplagd som en **utmaningsbaserad** (challenge-based) uppgift. Du får ingen färdig kravspecifikation. Du formulerar själv problemet, bestämmer vad som behöver byggas och avgör hur mycket verifiering som är rimligt. Kraven nedan handlar om *hur du arbetar och dokumenterar*, inte om vad du bygger.
+
+## Stor idé
+
+Med AI går det att bygga nästan vad som helst på en helg. Det som skiljer ett projekt som håller från ett som inte gör det är vad du gör efter att koden finns.
+
+## Grundläggande fråga
+
+**Hur mycket säkerhet och verifiering räcker för ett hobbyprojekt, och hur vet du att du har nått dit?**
+
+## Utmaningen
+
+Välj ett problem du själv bryr dig om och **bygg och lansera** en lösning på det med hjälp av AI, där AI-användning ingår i hela arbetet. Du bestämmer problemet, målgruppen och tekniken. Utmaningen är öppen: det finns inget facit.
+
+Några exempel för att väcka idéer, inte uppgifter att välja mellan:
+
+* ett litet verktyg du själv skulle använda varje vecka
+* en bot, en webbplats eller en app för en förening eller ett intresse
+* ett spel eller en leksak där du lär dig något nytt
+
+Du lämnar in via din fork av startrepot [`aiap-part1-hobby`](https://github.com/bth-aiap/aiap-part1-hobby). Din `AGENTS.md` är samtidigt din dokumentation och det dokument vi bedömer utifrån.
+
+## Vägledande frågor
+
+Dessa frågor ska du kunna svara på i slutet, och på vägen dit formulerar du fler egna.
+
+* Vem är projektet till för, och vad händer om det går sönder? Vem drabbas?
+* Vilka risker finns (hemligheter i repot, osäkra beroenden, osanerad indata, data om riktiga personer) och vilka tar du?
+* Hur vet du att koden gör det den ska, när du inte skrivit den själv?
+* Var hittade du fel i AI:ns kod, och hur hittade du dem?
+* Vad kostar det att bygga och köra projektet, och är det värt det?
+* Hur får du ut projektet så att någon annan kan använda det?
+
+## Vägledande aktiviteter
+
+Dessa är förslag på hur du kan angripa utmaningen. Hur du gör bestämmer du själv.
+
+1. Skriv ner problemet och en minimal användbar version innan du ber AI om något.
+2. Gör en snabb riskbedömning och bestäm vilken verifieringsnivå du tänker hålla.
+3. Generera en första version och verifiera den: kör den, läs den, testa den.
+4. Skriv tester som utgår från *kraven* snarare än från den kod som genererades.
+5. Prova minst två olika agenter (till exempel Claude Code, Codex eller OpenCode) på samma problem och jämför.
+6. Lansera, och mät vad AI-användningen kostade.
+7. Förbered seminariet utifrån din dokumentation.
+
+Resurser: [Generera, verifiera, testa, validera](/kunskap/verifiering/), [Entreprenörskap](/kunskap/entreprenorskap/), [del 0](/del0/).
+
+## Krav
+
+Alla krav ska vara uppfyllda för godkänt. De bedöms utifrån ditt repo och din `AGENTS.md`. `AGENTS.md` är uppdelad i rubriker som motsvarar kraven nedan.
+
+**K1. Projektet finns och går att köra.** Projektet ligger i din fork på GitHub och en läsare kan följa instruktionerna för att köra det.
+
+**K2. Utmaningen är formulerad.** Under rubriken *Project* beskriver du problemet, målgruppen, den minimala användbara versionen och vad som är *färdigt*.
+
+**K3. Riskbedömning och vald nivå.** Under *Stakes and risk assessment* beskriver du vad som kan gå fel, vem som drabbas och vilken nivå av säkerhet och verifiering du valt och varför. Du motiverar även vad du medvetet *inte* gör.
+
+**K4. Krav och verifieringsplan.** Under *Requirements* och *Verification plan* listar du dina krav och hur varje krav verifieras (test, körning, granskning). Minst en del av verifieringen är automatiserad.
+
+**K5. Verifiering som verkligen hittat något.** Under *AI usage log* dokumenterar du minst ett fall där din verifiering hittade ett fel eller en hallucination i AI-genererad kod, hur du hittade det och vad du gjorde.
+
+**K6. Grundläggande säkerhet.** Under *Security* redogör du för hur du hanterat hemligheter, beroenden och indata, anpassat till vald nivå.
+
+**K7. Entreprenörskap.** Under *Entrepreneurship* beskriver du värdet för användaren, vad det kostade att bygga och köra (inklusive AI-kostnad, ungefärlig uppskattning räcker), och hur du lanserat eller skulle lansera projektet. Projektet ska vara åtkomligt för andra eller ha en konkret lanseringsplan.
+
+**K8. Flera agenter.** Du har provat minst två olika agenter och dokumenterat vad som skilde dem åt.
+
+**K9. Beslutsloggen.** Under *Decision log* finns de viktiga beslut du tagit, med alternativ och skäl. Din agent har fört loggen löpande, men du har läst och står för den.
+
+**K10. Seminarium.** Du deltar i seminariet och kan redogöra för dina beslut, din verifiering och projektets värde och kostnad.
+
+<Aside type="note">
+Det finns ingen kodgranskning i del 1.
+</Aside>
+
+## Reflektion
+
+Inför seminariet: vilket beslut skulle du ta annorlunda, och vad skulle du verifiera mer eller mindre om projektet vore större?
+
+{/* TODO: tidsplan, bedömningskriterier och hur lansering bedöms, se QUESTIONS.md */}

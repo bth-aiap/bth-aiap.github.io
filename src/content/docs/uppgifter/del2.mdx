@@ -1,0 +1,77 @@
+---
+title: Uppgift del 2 – Vanliga webbapplikationer
+description: Utmaning, krav och leverabler för del 2
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Uppgiften är **utmaningsbaserad** (challenge-based). Du formulerar själv problemet och bestämmer vad som ska byggas. Kraven handlar om hur du arbetar och dokumenterar, och om att resultatet går att *underhålla*.
+
+## Stor idé
+
+Kod som är billig att skriva är inte billig att äga. En webbapplikation ska leva, ändras och drivas av andra än den som skrev den.
+
+## Grundläggande fråga
+
+**Hur bygger och bevisar du att en AI-genererad webbapplikation är säker nog och underhållbar nog för att någon annan ska kunna lita på och ta över den?**
+
+## Utmaningen
+
+Välj en realistisk webbapplikation med riktiga användare eller ett realistiskt scenario, till exempel en webbshop eller ett företags webbplats, eller ett icke-kritiskt internt system. Bygg den med AI och lämna över den i ett skick där någon annan kan driva den vidare. Du bestämmer problemet, kunden, tekniken och omfattningen. Utmaningen är öppen.
+
+Du arbetar i din fork av [`aiap-part2-webapp`](https://github.com/bth-aiap/aiap-part2-webapp). Din `AGENTS.md` är din dokumentation och det vi bedömer utifrån.
+
+## Vägledande frågor
+
+* Vem är kunden och användarna, och vad är affärsvärdet?
+* Vilka hot finns (till exempel de i OWASP Top 10) och hur har du bemött dem?
+* Hur vet du att en ändring inte förstör något? Vilka tester och kontroller körs automatiskt?
+* Kan en person (eller en ny agent) som inte varit med förstå strukturen och lägga till en funktion? Hur har du bevisat det?
+* Vad kostar applikationen att äga över tid, inklusive AI-användning? Bygga eller köpa?
+* Vad blir de etiska och hållbarhetsmässiga konsekvenserna av att utveckla och driva den med AI?
+
+## Vägledande aktiviteter
+
+1. Definiera kund, användare och krav, och en tydlig avgränsning.
+2. Gör en hotbedömning och bestäm verifieringsnivå.
+3. Bygg i små, granskade steg. Låt agenten skriva, men granska varje ändring.
+4. Sätt upp automatiska kontroller (lint, tester, beroendekontroll) som körs vid varje ändring.
+5. Testa underhållbarheten: ge en ny agentsession bara din dokumentation och be den lägga till en funktion. Rätta dokumentationen utifrån vad som gick fel.
+6. Räkna på ekonomin och AI-kostnaden, och analysera etik och hållbarhet.
+7. Förbered repot för kodgranskning och granska andras repon.
+
+Resurser: [Generera, verifiera, testa, validera](/kunskap/verifiering/), [Entreprenörskap](/kunskap/entreprenorskap/), [Etik och hållbarhet](/kunskap/etik_och_hallbarhet/), [Kodgranskning](/kunskap/kodgranskning/).
+
+## Krav
+
+Alla krav ska vara uppfyllda för godkänt. `AGENTS.md` har rubriker som motsvarar kraven.
+
+**K1. Applikationen finns, går att köra och är driftsatt eller har en dokumenterad driftsättning.**
+
+**K2. Utmaningen är formulerad.** Under *Project*: kund, användare, affärsvärde, avgränsning och vad som är färdigt.
+
+**K3. Hotbedömning och vald nivå.** Under *Stakes and risk assessment*: vilka hot du identifierat, vad du bemött, vad du accepterat och varför.
+
+**K4. Krav och verifiering.** Under *Requirements* och *Verification plan*: krav med identifierare, och hur varje krav verifieras. Automatiska tester körs i CI vid varje ändring.
+
+**K5. Säkerhet.** Under *Security*: hantering av hemligheter, autentisering/åtkomst där det är relevant, indata, och kontroll av beroenden. Du har prövat angreppen du bedömt som relevanta.
+
+**K6. Underhållbarhet bevisad.** Under *Maintainability*: struktur, konventioner och hur du bevisat att någon annan kan ändra koden, till exempel genom testet med en ny agentsession ovan. Du redovisar vad som gick fel och vad du ändrade.
+
+**K7. AI-granskning.** Under *AI usage log*: hur varje AI-genererad ändring granskats, minst två fall där verifieringen hittade fel, och vad som skilde åt de agenter du provat.
+
+**K8. Ekonomi och entreprenörskap.** Under *Entrepreneurship*: affärsmodell, bygga eller köpa, total ägandekostnad inklusive AI-kostnad, och en lanseringsplan eller lansering.
+
+**K9. Etik och hållbarhet.** Under *Ethics and sustainability*: en analys av konsekvenserna av hur du byggt och driver applikationen, inklusive resursförbrukning av AI-användningen och hur AI-genererad kod påverkar underhåll och ansvar.
+
+**K10. Beslutsloggen.** Under *Decision log*: viktiga beslut med alternativ och skäl.
+
+**K11. Kodgranskning (1 hp).** Du granskar de repon läraren tilldelat dig, på GitHub, och ditt eget repo är redo att granskas. Se [kodgranskning](/kunskap/kodgranskning/).
+
+**K12. Seminarium.** Du deltar och kan redogöra för beslut, verifiering, underhållbarhet, ekonomi samt etik och hållbarhet.
+
+## Reflektion
+
+Inför seminariet: vad är skillnaden mellan det du bevisat och det du bara antar om din applikation, och vem bär ansvaret för resten?
+
+{/* TODO: tidsplan, bedömningskriterier, hur driftsättning och kodgranskning bedöms, se QUESTIONS.md */}

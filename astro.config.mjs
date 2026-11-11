@@ -33,6 +33,10 @@ export default defineConfig({
 					items: ['del1', 'del2', 'del3'],
 				},
 				{
+					label: 'Uppgifter',
+					items: ['uppgifter/del1', 'uppgifter/del2', 'uppgifter/del3'],
+				},
+				{
 					label: 'Kunskap',
 					items: [
 						'kunskap/verifiering',
